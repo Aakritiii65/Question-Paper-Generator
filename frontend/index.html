@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    
+    <title>Question Paper Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <h1>Question Paper Generator</h1>
+
+<div class="spline-wrapper">
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.26/build/spline-viewer.js"></script>
+<spline-viewer url="https://prod.spline.design/xpRKAWK3xXlA4qAn/scene.splinecode"></spline-viewer>
+</div>
+
+    <h3>Select Exam:</h3>
+    <button onclick="setExam('class10')">Class 10</button>
+    <button onclick="setExam('class12')">Class 12</button>
+    <button onclick="setExam('jee')">JEE Mains</button>
+
+    <br><br>
+    <label>Subject:</label>
+    <select id="subject" onchange="loadTopics()"></select>
+
+    <label>Topic:</label>
+    <select id="topic"></select>
+
+    <br><br>
+    <!-- <button onclick="generateMCQs()">Generate AI MCQs</button> -->
+
+    <br><br>
+    <label>PYQ Year:</label>
+    <input type="number" id="pyq-year" placeholder="e.g., 2022">
+    <button onclick="fetchPYQs()">Fetch PYQs</button>
+
+    <br><br>
+    <label>Total Marks:</label>
+    <input type="number" id="marks" placeholder="e.g., 50">
+    <button onclick="generatePaper()">Generate Paper</button>
+
+    <br><br>
+    <button onclick="downloadPDF()">Download PDF</button>
+
+    <pre id="output"></pre>
+
+    <!-- javascript part -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    let selectedExam = "";
+
+    function setExam(exam) {
+        selectedExam = exam;
+        alert("Selected: " + exam.toUpperCase());
+        fetchSubjects();
+    }
+
+    async function fetchSubjects() {
+        const res = await fetch("http://localhost:3000/topics");
+        const data = await res.json();
+        const subjects = Object.keys(data[selectedExam]);
+
+        const subjectSelect = document.getElementById("subject");
+        subjectSelect.innerHTML = "";
+        subjects.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = sub;
+        subjectSelect.appendChild(opt);
+        });
+
+        loadTopics();
+    }
+
+
+    function loadTopics() {
+    const subject = document.getElementById("subject").value;
+    fetch("http://localhost:3000/topics")
+    .then(res => res.json())
+    .then(data => {
+        const topics = Object.keys(data[selectedExam][subject]);
+        const topicSelect = document.getElementById("topic");
+        topicSelect.innerHTML = "";
+
+        const allOpt = document.createElement("option");
+        allOpt.value = "all";
+        allOpt.textContent = "All Topics";
+        topicSelect.appendChild(allOpt);
+
+        topics.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        topicSelect.appendChild(opt);
+        });
+    });
+}
+
+
+
+    async function generateMCQs() {
+        const topic = document.getElementById("topic").value;
+        const res = await fetch("http://localhost:3000/generate-mcq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic })
+        });
+        const data = await res.json();
+        document.getElementById("output").textContent = data.mcqs;
+    }
+
+async function fetchPYQs() {
+  const year = parseInt(document.getElementById("pyq-year").value);
+  const subject = document.getElementById("subject").value;
+
+  const res = await fetch("http://localhost:3000/get-pyqs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ examLevel: selectedExam, year, subject })
+  });
+
+  const data = await res.json();
+  let text = "Past Year Questions:\n\n";
+  data.pyqs.forEach((q, i) => {
+    text += `${i + 1}. ${q.question} (${q.marks} marks)\n`;
+  });
+  document.getElementById("output").textContent = text;
+}
+
+
+
+async function generatePaper() {
+    const marks = parseInt(document.getElementById("marks").value);
+    const subject = document.getElementById("subject").value;
+    const topic = document.getElementById("topic").value;
+
+    const res = await fetch("http://localhost:3000/generate-paper", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ examLevel: selectedExam, subject, topic, totalMarks: marks })
+    });
+    const data = await res.json();
+    let text = "Auto Generated Paper:\n\n";
+    data.paper.forEach((q, i) => {
+        text += `${i + 1}. ${q.question} (${q.marks} marks)\n\n`;
+    });
+    document.getElementById("output").textContent = text;
+}
+
+
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const content = document.getElementById("output").textContent;
+        doc.text(content, 10, 10);
+        doc.save("question-paper.pdf");
+        }
+
+
+        //gsap animations
+        window.onload = () => {
+    gsap.from("h1", { y: -50, opacity: 0, duration: 2});
+    gsap.from("button", { opacity: 0, y: 20, stagger: 0.2, duration: 0.5 });
+    gsap.to("button", { opacity: 100, y: 0, stagger: 0.3, duration: 0.4 });
+    gsap.from(".spline-wrapper", { opacity: 0, y: 30, duration: 1.2, delay: 0.3 });
+    }
+    </script>
+</body>
+</html>

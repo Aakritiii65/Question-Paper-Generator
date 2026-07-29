@@ -1,0 +1,182 @@
+
+
+
+/* Reset default margins/paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom right, #e2ebf0, #f8f9fa);
+  color: #333;
+  padding: 30px;
+  background-color: #252424;
+}
+
+/* Heading */
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #0d6efd;
+}
+
+/* Section titles */
+h3 {
+  margin-top: 20px;
+  color: #333;
+}
+
+
+
+/* Inputs and Selects */
+label {
+  position: relative;
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+input, select {
+  position: relative;
+  padding: 8px;
+  margin-right: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  width: 200px;
+}
+
+select {
+  width: auto;
+}
+
+/* Output Section */
+#output {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 25px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  input, select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #output {
+    max-height: none;
+  }
+}
+
+/* new   */
+/* style.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #00000000;
+  color: #333;
+  margin: 0;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+h1 {
+  text-align: center;
+  color: #ffd900;
+  margin-bottom: 2rem;
+}
+
+
+/* changes done */
+h3 {
+  color: #ffd900;
+}
+
+label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+button {
+  background: #881d8b;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  margin: 0.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #6b0563;
+}
+
+select, input[type="number"] {
+  padding: 0.4rem;
+  margin: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: #fff;
+}
+
+#output {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 2rem;
+  white-space: pre-wrap;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+input::placeholder {
+  color: #666665;
+}
+
+
+
+/* spline 3d section */
+.spline-wrapper {
+  top: 2vh;
+  right: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* z-index: -1; */
+  margin: 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); */
+  object-fit: cover;
+}
+
+spline-viewer {
+  /* position: absolute; */
+  width: 100%;
+  height: 100%;
+  border: none;
+}
