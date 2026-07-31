@@ -87,6 +87,8 @@ app.get("/topics", (req, res) => {
   res.json(topicTree);
 });
 
-app.listen(3000, () => {
-  console.log("Coz people hate me for my college ,Backend running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
 });
